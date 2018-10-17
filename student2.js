@@ -4,22 +4,25 @@
 //Lab 12 done
 //Lab 13 done
 //Lab 14 done
+//Lab 15 done
 
 var product1 = {
-    name: "Village Tapestry",
-    id: "100",
-    desc: "Hand-made tapestry from Oaxaca, Mexico. These tapestries are made with organic and natural dyes."
+    "name": "Village Tapestry",
+    "id": "100",
+    "desc": "Hand-made tapestry from Oaxaca, Mexico. These tapestries are made with organic and natural dyes."
 };
 var product2 = {
-    name: "Authentic Oaxacan Blouse",
-    id: "200",
-    desc: "Hand embroidered Oaxacan blouse. The blouse is embroidered with a floral design."
+    "name": "Authentic Oaxacan Blouse",
+    "id": "200",
+    "desc": "Hand embroidered Oaxacan blouse. The blouse is embroidered with a floral design."
 };
 var product3 = {
-    name: "Hand-Crafted Backpack",
-    id: "300",
-    desc: "Hand-made backpack for everyday use. This is sturdy and durable with adjustable straps."
+    "name": "Hand-Crafted Backpack",
+    "id": "300",
+    "desc": "Hand-made backpack for everyday use. This is sturdy and durable with adjustable straps."
 };
+var product4 = null;
+var product5 = null;
 var cardArray = [];
 var cardnum = -1;
 var ad1Window = null;
@@ -46,7 +49,8 @@ function getFooter() {
 
 getHeader();
 getFooter();
-
+getProduct({ type: "clothes", number: "1" });
+getProduct({ type: "clothes", number: "2" });
 
 //Lab 8
 function makeMenu(size) {
@@ -62,8 +66,11 @@ function makeMenu(size) {
     menuNumHTML += "<button onClick='popupAd()'>Pop Up Ad </button><br><br>";
     menuNumHTML += "<button onClick='closeAd()'>Close Ad </button><br><br>";
     menuNumHTML += "<button onClick='makeForm()'>Make Form </button><br><br>";
+    menuNumHTML += "<button onClick='makeMain(product4)'>Product#4 </button><br><br>";
+    menuNumHTML += "<button onClick='makeMain(product5)'>Product#5</button><br><br>";
     return menuNumHTML;
 }
+
 
 function makeMain(product) {
     cardnum = -1;
@@ -88,8 +95,7 @@ var getMyMenu = document.getElementById("my_menu").innerHTML = makeMenu(3);
 
 
 function makeLinkBar() {
-    var htmlAnswer = "<a alt='' width='1' height='1' " +
-        "src='https://www.paypalobjects.com/en_US/i/scr/pixel.gif'> Buy Here </a>";
+    var htmlAnswer = "<a alt='' width='1' height='1' " + "src='https://www.paypalobjects.com/en_US/i/scr/pixel.gif'> Buy Here </a>";
 
     return htmlAnswer;
 }
@@ -240,4 +246,26 @@ function makeForm(){
     formHTML += "<td align=right><input type='reset'></td></tr>";
     formHTML += "</table></form>";
     document.getElementById("my_main").innerHTML = formHTML;
+}
+
+function getProduct(jsonobj) {
+    var server = 'http://www.college1.com/getproduct.php';
+    var jsonstr = JSON.stringify(jsonobj);           // This is a string in JSON format 
+    xmlhttp = new XMLHttpRequest();
+    xmlhttp.open("GET", server + "?jsonstr=" + jsonstr, true); // open connection to server 
+    xmlhttp.send();  // send request, causes onreadystatechange to run when reply is ready  
+
+    xmlhttp.onreadystatechange = function () {
+        //console.log('hello ' + this.readyState + ' ' + this.status); 
+        if (this.readyState == 4 && this.status == 200) {
+            replystr = this.responseText;           // replystr MUST BE GLOBAL 
+            //console.log(replystr); 
+            if (product4 == null)
+                product4 = JSON.parse(replystr);
+            else if (product5 == null)
+                product5 = JSON.parse(replystr);
+            else
+                console.log('Error, no object variable available');
+        }
+    };
 }
